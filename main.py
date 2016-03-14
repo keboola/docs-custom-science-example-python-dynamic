@@ -6,7 +6,7 @@ cfg = docker.Config('/data/')
 
 # get list of input tables
 tables = cfg.getInputTables()
-i = 0
+j = 0
 for table in tables:
     # get csv file name 
     inName = table['destination'] 
@@ -15,10 +15,10 @@ for table in tables:
     manifest = cfg.getTableManifest(inName)
 
     # get csv file name with full path from output mcfging
-    outName = cfg.getExpectedOutputTables()[i]['full_path']
+    outName = cfg.getExpectedOutputTables()[j]['full_path']
 
     # get file name from output mcfging
-    outDestination = cfg.getExpectedOutputTables()[i]['destination']
+    outDestination = cfg.getExpectedOutputTables()[j]['destination']
 
     # get csv full path and read table data
     i = 0
@@ -50,3 +50,4 @@ for table in tables:
 
     # write table metadata - set new primary key
     cfg.writeTableManifest(outName, destination = outDestination, primaryKey = pk)
+    j = j + 1
