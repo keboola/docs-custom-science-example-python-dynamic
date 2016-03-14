@@ -1,34 +1,36 @@
 import csv
 from keboola import docker
 
-# initialize application
+# initialize cfglication
 cfg = docker.Config('/data/')
 
 # get list of input tables
-tables <- app.getInputTables()
-for (table in tables) {
+tables = cfg.getInputTables()
+i = 0
+for table in tables:
     # get csv file name 
-    inName <- table['destination'] 
+    inName = table['destination'] 
     
     # read input table metadata
-    manifest <- app.getTableManifest(name)
+    manifest = cfg.getTableManifest(inName)
 
-    # get csv file name with full path from output mapping
-    outName <- app.getExpectedOutputTables()[table]['full_path']
+    # get csv file name with full path from output mcfging
+    outName = cfg.getExpectedOutputTables()[i]['full_path']
 
-    # get file name from output mapping
-    outDestination <- app.getExpectedOutputTables()[table]['destination']
+    # get file name from output mcfging
+    outDestination = cfg.getExpectedOutputTables()[i]['destination']
 
     # get csv full path and read table data
     i = 0
-    with open(inName, mode='rt', encoding='utf-8') as inFile, open(outName, mode='wt', encoding='utf-8') as outFile:
+    with open(table['full_path'], mode='rt', encoding='utf-8') as inFile, open(outName, mode='wt', encoding='utf-8') as outFile:
         # read input file line-by-line
         lazyLines = (line.replace('\0', '') for line in inFile)
         csvReader = csv.DictReader(lazyLines, dialect='kbc')
-        headers = reader.fieldnames
-
+        headers = csvReader.fieldnames
+        headers.extend(['primaryKey'])
+        
         # write output file header
-        writer = csv.DictWriter(outFile, fieldnames = headers.extend('primaryKey'), dialect='kbc')
+        writer = csv.DictWriter(outFile, fieldnames = headers, dialect='kbc')
         writer.writeheader()
 
         for row in csvReader:
@@ -47,5 +49,4 @@ for (table in tables) {
         pk = manifest['primary_key']
 
     # write table metadata - set new primary key
-    app.writeTableManifest(outName, destination = outDestination, primaryKey = pk)
-}
+    cfg.writeTableManifest(outName, destination = outDestination, primaryKey = pk)
