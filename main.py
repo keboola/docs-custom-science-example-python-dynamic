@@ -49,5 +49,5 @@ for table in tables:
         pk = manifest['primary_key']
 
     # write table metadata - set new primary key
-    cfg.writeTableManifest(outName, destination=outDestination, primary_key=pk)
+    cfg.write_table_manifest(outName, destination=outDestination, primary_key=pk)
     j = j + 1
