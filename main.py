@@ -5,7 +5,7 @@ from keboola import docker
 cfg = docker.Config('/data/')
 
 # get list of input tables
-tables = cfg.getInputTables()
+tables = cfg.get_input_tables()
 j = 0
 for table in tables:
     # get csv file name
